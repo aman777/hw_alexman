@@ -34,24 +34,21 @@ int main(int argc, char* argv[])
 		ss << curr;
 		ss >> curr;
 		if (curr == "MOVEIN") {
-			int i,k; //"i" floor number, "k" # of students 
+			int i,k;  
 			ss >> i;
 			ss >> k;
-			if (!ss.eof()) {
+			if ((!ss.eof()) || (ss.fail())) {
 				output << "Error - incorrect command" << endl;
 			}
 			else {
-				if ( !((i <= floors) && (i >= 0)) ) {
+				if ( ((i-1) > floors) ) {
 					output << "Error - floor " << i << "  does not exist" << endl;
 				}
-				else if (floorsizes[i] != 0) {
-					output << "Error - floor i is not empty" << endl;				
+				else if (floorsizes[i-1] != 0) {
+					output << "Error - floor " << i << " is not empty" << endl;			
 				}
 				else {
 					floorsizes[i-1] = k;
-
-					//output << "MOVEIN i = " << i << " floorsizes[i-1] = " << floorsizes[i-1] << endl;
-					cout << "MOVEIN " << k << endl;
 
 					trojans[i-1] = new string*[k];
 					possessions[i-1] = new int[k];
@@ -66,11 +63,11 @@ int main(int argc, char* argv[])
 		else if (curr == "MOVEOUT") {
 			int i;
 			ss >> i;
-			if (ss.fail()) {
+			if ((!ss.eof()) || (ss.fail())) {
 				output << "Error - incorrect command" << endl;
 			}
 
-			if ( ((i-1) > floors)) {
+			else if ( ((i-1) > floors)) {
 				output << "Error - invalid floor" << endl;
 			}
 
@@ -80,11 +77,10 @@ int main(int argc, char* argv[])
 
 			else {
 				delete[] trojans[i-1];
-				trojans[i-1] = NULL;
+				trojans[i-1] = NULL;				
 				floorsizes[i-1] = 0;
-				cout << "MOVEOUT " << i << endl;
-				//output << "MOVEOUT floorsizes[i-1]= " << floorsizes[i-1] << " i= " << i << endl;
-
+				delete[] possessions[i-1];
+				possessions[i-1] = NULL;
 			}
 		}
 		
@@ -92,7 +88,7 @@ int main(int argc, char* argv[])
 			int i, j, k;
 			ss >> i >> j >> k;
 
-			if (ss.fail()) {
+			if ((!ss.eof()) || (ss.fail())) {
 				output << "Error - incorrect command" << endl;
 			}
 
@@ -103,8 +99,6 @@ int main(int argc, char* argv[])
 			else if (possessions[i-1][j-1] == 0) {
 				possessions[i-1][j-1] = k;
 				trojans[i-1][j-1] = new string[k];
-
-				//output << "OBTAIN floorsizes[i-1]= " << floorsizes[i-1] << " i= " << i << endl;
 
 				for (int x = 0; x < k; x++) {
 					string stuff;
@@ -122,6 +116,9 @@ int main(int argc, char* argv[])
 			int i, j;
 			ss >> i >> j;
 
+			if ((!ss.eof()) || (ss.fail())) {
+				output << "Error - incorrect command" << endl;
+			}
 			if (possessions[i-1][j-1] != 0) {
 				for (int k = 0; k < possessions[i-1][j-1]; k++) { //SEG FAULT IN THIS LOOP
 					output << trojans[i-1][j-1][k] << endl; 
@@ -139,9 +136,12 @@ int main(int argc, char* argv[])
 		}
 		
 		else {
-			output << "Error - incorrect command" << endl;	
+			output << "Error - incorrect command" << endl;
 		}
 	}
+
+
+/*
 	for (int i = 0; i < floors; i++) {
 		delete[] possessions[i];
 	}
@@ -149,6 +149,6 @@ int main(int argc, char* argv[])
 	delete[] trojans[floors];
 	delete[] trojans;
 	delete[] possessions;
-
+*/
 	return 0;
 }
