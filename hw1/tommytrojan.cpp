@@ -41,14 +41,16 @@ int main(int argc, char* argv[])
 			ss >> k;
 			if ((!ss.eof()) || (ss.fail())) { //THIS WONT' ACCEPT WHITESPACE AFTER IT FOR SOME REASON?
 				//E.G. MOVEIN 1 1______________
+
+				//DO A QUICK VALGRIND OF THIS AND CURRENT TEXT FILE. I HAVE SOME SORT OF ERRORS EVEN THOUGH THERE IS NO MEMLEAK
 				output << "Error - incorrect command" << endl;
 			}
 			else {
 				if (i > (floors-1)) {
-					output << "Error - floor " << i-1 << "  does not exist" << endl;
+					output << "Error - floor " << i << "  does not exist" << endl;
 				}
 				else if (floorsizes[i] != 0) {
-					output << "Error - floor " << i-1 << " is not empty" << endl;			
+					output << "Error - floor " << i << " is not empty" << endl;			
 				}
 				else {
 					floorsizes[i] = k;
@@ -122,18 +124,16 @@ int main(int argc, char* argv[])
 			int i, j;
 			ss >> i >> j;
 
-			cout << i << endl << j << endl;
-
 			if ((!ss.eof()) || (ss.fail())) {
 				output << "Error - incorrect command" << endl;
 
 			}
 			else {
-				if ((possessions[i] == NULL) || (possessions[i][j] == 0)) {
+				if ((i > floors-1) || (possessions[i] == NULL)) { //I THINK THIS IS AN ILLEGAL ACCESS
 					output << "Error - student has no possessions" << endl;	
 				}
 
-				else if (floorsizes[i] == 0) {
+				else if ((floorsizes[i] == 0) || (i > floors-1)) {
 					output << "Error - no student " << i-1 << " on that floor" << endl;
 				}
 
