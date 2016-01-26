@@ -36,16 +36,13 @@ int main(int argc, char* argv[])
 		ss << curr;
 		ss >> curr;
 		if (curr == "MOVEIN") {
-			int i,k;  
-			ss >> i;
-			ss >> k;
-			if ((!ss.eof()) || (ss.fail())) { //THIS WONT' ACCEPT WHITESPACE AFTER IT FOR SOME REASON?
-				//E.G. MOVEIN 1 1______________
+			int i,k, empty;  
 
-				//DO A QUICK VALGRIND OF THIS AND CURRENT TEXT FILE. I HAVE SOME SORT OF ERRORS EVEN THOUGH THERE IS NO MEMLEAK
-				output << "Error - incorrect command" << endl;
-			}
-			else {
+			ss >> i >> k;
+			ss >> empty;
+
+			if(ss.fail())
+			{
 				if (i > (floors-1)) {
 					output << "Error - floor " << i << "  does not exist" << endl;
 				}
@@ -64,13 +61,18 @@ int main(int argc, char* argv[])
 					}
 				}
 			}
+			else {
+				output << "Error - incorrect command" << endl;
+			}
 		}
 
 		else if (curr == "MOVEOUT") {//THIS WONT' ACCEPT WHITESPACE AFTER IT FOR SOME REASON?
 				//E.G. MOVEOUT 1 1______________
-			int i;
+			int i, empty;
 			ss >> i;
-			if ((!ss.eof()) || (ss.fail())) {
+			ss >> empty;
+
+			if (ss.fail()) {
 				output << "Error - incorrect command" << endl;
 			}
 			else {
@@ -92,14 +94,11 @@ int main(int argc, char* argv[])
 				}		
 			}
 		}
-		else if (curr == "OBTAIN") {//THIS WONT' ACCEPT WHITESPACE AFTER IT FOR SOME REASON?
-				//E.G. MOVEIN 1 1______________
+		else if (curr == "OBTAIN") {
 			int i, j, k;
-			ss >> i;
-			ss >> j;
-			ss >> k;
+			ss >> i >> j >> k;
 
-			if ((ss.fail())) { //THIS IS CREATING MEM LEAKS, i need eof but at the same time its messing it up
+			if (ss.fail()) { //THIS IS CREATING MEM LEAKS, i need eof but at the same time its messing it up
 				output << "Error - incorrect command" << endl;
 			}
 
@@ -114,17 +113,19 @@ int main(int argc, char* argv[])
 					for (int x = 0; x < k; x++) {
 						ss >> trojans[i][j][x];
 					}							
-				}				
+				}
 				else {
 					output << "Error - student already has possessions" << endl;
 				}				
 			}
 		}	
-		else if (curr == "OUTPUT") { 
-			int i, j;
-			ss >> i >> j;
 
-			if ((!ss.eof()) || (ss.fail())) {
+		else if (curr == "OUTPUT") { 
+			int i, j, empty;
+			ss >> i >> j;
+			ss >> empty;
+
+			if (!ss.fail()) {
 				output << "Error - incorrect command" << endl;
 
 			}
