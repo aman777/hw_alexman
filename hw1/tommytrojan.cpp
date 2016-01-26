@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 					output << "Error - student has no possessions" << endl;	
 				}
 
-				else if ((floorsizes[i] == 0) || (i > floors-1)) {
+				else if ((i > floors-1) || (floorsizes[i] <= j)) {
 					output << "Error - no student " << i-1 << " on that floor" << endl;
 				}
 
