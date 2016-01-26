@@ -28,7 +28,9 @@ int main(int argc, char* argv[])
   	for (int i = 0; i < floors; i++) {
 		floorsizes[i] = 0;
 		trojans[i] = NULL;
+		possessions[i] = NULL;
 	}
+	getline(input, curr);
 	while(getline(input, curr)) {
 		stringstream ss;
 		ss << curr;
@@ -41,20 +43,21 @@ int main(int argc, char* argv[])
 				output << "Error - incorrect command" << endl;
 			}
 			else {
-				if ( ((i-1) > floors) ) {
+				if ( ((i) > floors) ) {
 					output << "Error - floor " << i << "  does not exist" << endl;
 				}
-				else if (floorsizes[i-1] != 0) {
+				else if (floorsizes[i] != 0) {
 					output << "Error - floor " << i << " is not empty" << endl;			
 				}
 				else {
-					floorsizes[i-1] = k;
+					floorsizes[i] = k;
 
-					trojans[i-1] = new string*[k];
-					possessions[i-1] = new int[k];
+					trojans[i] = new string*[k];
+					possessions[i] = new int[k];
 
 					for (int j = 0; j < k; j++) {
-						possessions[i-1][j] = 0;
+						possessions[i][j] = 0;
+						trojans[i][j] = NULL;
 					}
 				}
 			}
@@ -67,20 +70,25 @@ int main(int argc, char* argv[])
 				output << "Error - incorrect command" << endl;
 			}
 
-			else if ( ((i-1) > floors)) {
+			else if ((i > floors)) {
 				output << "Error - invalid floor" << endl;
 			}
 
-			else if (floorsizes[i-1] == 0) {
+			else if (floorsizes[i] == 0) {
 				output << "Error - no one lives on that floor" << endl;
 			}	
 
 			else {
-				delete[] trojans[i-1];
-				trojans[i-1] = NULL;				
-				floorsizes[i-1] = 0;
-				delete[] possessions[i-1];
-				possessions[i-1] = NULL;
+				for (int x = 0; x < floorsizes[i]; x++) {
+					delete [] trojans[i][x];
+				}
+				delete[] trojans[i];
+				trojans[i] = NULL;
+				floorsizes[i] = 0;
+				if (possessions[i] != NULL) {
+					delete[] possessions[i];
+					possessions[i] = NULL;
+				}
 			}
 		}
 		
@@ -88,26 +96,28 @@ int main(int argc, char* argv[])
 			int i, j, k;
 			ss >> i >> j >> k;
 
-			if ((!ss.eof()) || (ss.fail())) {
+			if (ss.fail()) {
 				output << "Error - incorrect command" << endl;
 			}
 
-			if (floorsizes[i-1] == 0) {
+			else if (floorsizes[i] == 0) {
 				output << "Error - nobody lives on that floor" << endl;
 			}
 
-			else if (possessions[i-1][j-1] == 0) {
-				possessions[i-1][j-1] = k;
-				trojans[i-1][j-1] = new string[k];
+			else if (possessions[i][j] == 0) { //CORE DUMP HERE
+
+				possessions[i][j] = k;
+				trojans[i][j] = new string[k];
 
 				for (int x = 0; x < k; x++) {
-					string stuff;
-					ss >> stuff;
+					// string stuff;
+					// ss >> stuff;
 					
-					trojans[i-1][j-1][x] = stuff;
+					// trojans[i][j][x] = stuff;
+					ss >> trojans[i][j][x];
 				}
-			}
 
+			}
 			else 
 				output << "Error - student already has possessions" << endl;
 		}
@@ -119,9 +129,9 @@ int main(int argc, char* argv[])
 			if ((!ss.eof()) || (ss.fail())) {
 				output << "Error - incorrect command" << endl;
 			}
-			if (possessions[i-1][j-1] != 0) {
-				for (int k = 0; k < possessions[i-1][j-1]; k++) { //SEG FAULT IN THIS LOOP
-					output << trojans[i-1][j-1][k] << endl; 
+			if (possessions[i][j] != 0) {
+				for (int k = 0; k < possessions[i][j]; k++) { //SEG FAULT IN THIS LOOP
+					output << trojans[i][j][k] << endl; 
 				} 				
 			}
 
@@ -140,15 +150,19 @@ int main(int argc, char* argv[])
 		}
 	}
 
+//MAKE CHECKS FOR EACH THING
+//MAKE SURE THAT NO ONE HAS AN ITEM
 
-/*
 	for (int i = 0; i < floors; i++) {
+		for (int j = 0; j < floorsizes[i]; j++) {
+				delete[] trojans[i][j];
+		}
+		delete[] trojans[i];
 		delete[] possessions[i];
 	}
-	delete[] floorsizes;
-	delete[] trojans[floors];
 	delete[] trojans;
 	delete[] possessions;
-*/
+	delete[] floorsizes;
+
 	return 0;
 }
