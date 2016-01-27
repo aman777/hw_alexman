@@ -66,16 +66,12 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		else if (curr == "MOVEOUT") {//THIS WONT' ACCEPT WHITESPACE AFTER IT FOR SOME REASON?
-				//E.G. MOVEOUT 1 1______________
+		else if (curr == "MOVEOUT") {
 			int i, empty;
 			ss >> i;
 			ss >> empty;
 
 			if (ss.fail()) {
-				output << "Error - incorrect command" << endl;
-			}
-			else {
 				if ((i > floors-1)) {
 					output << "Error - invalid floor" << endl;
 				}				
@@ -91,7 +87,11 @@ int main(int argc, char* argv[])
 					trojans[i] = NULL;
 					possessions[i] = NULL;
 					floorsizes[i] = 0;
-				}		
+				}						
+
+			}
+			else {
+				output << "Error - incorrect command" << endl;
 			}
 		}
 		else if (curr == "OBTAIN") {
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 
 			else {
 				if (floorsizes[i] == 0) {
-					output << "Error - nobody lives on that floor" << endl;
+					output << "Error - nobody lives on " << i << " floor" << endl;
 				}
 				else if (possessions[i][j] == 0) {
 					possessions[i][j] = k;
@@ -130,12 +130,12 @@ int main(int argc, char* argv[])
 
 			}
 			else {
-				if ((i > floors-1) || (possessions[i] == NULL)) { //I THINK THIS IS AN ILLEGAL ACCESS
+				if ((possessions[i] == NULL)) { 
 					output << "Error - student has no possessions" << endl;	
 				}
 
-				else if ((i > floors-1) || (floorsizes[i] <= j)) {
-					output << "Error - no student " << i-1 << " on that floor" << endl;
+				else if ((floorsizes[i] <= j)) {
+					output << "Error - no student " << i << " on that floor" << endl;
 				}
 
 				else {  				
